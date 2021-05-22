@@ -8,11 +8,13 @@ load_dotenv()
 
 intents = discord.Intents().all()
 awake = False
+streak = 0
 client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+    is_awake.start()
 
 @client.event
 async def on_member_update(before, after):
@@ -20,25 +22,25 @@ async def on_member_update(before, after):
     if awake:
         return
     if after.id == int(os.getenv('USERID')):
-        print('Michael is online')
         awake = True
-        print(awake)
 
 @tasks.loop(seconds=10)
 async def is_awake():
     global awake
+    global streak
+
+    channel = client.get_channel(int(os.getenv('CHANNELID')))  # notification channel
     time_now = datetime.datetime.now().time()
     if time_now > datetime.time(4,55) and time_now < datetime.time(5,0):
-        print(awake)
         await asyncio.sleep(900)
-        print(awake)
         if not awake:
-            print("you are not awake")
+            await channel.send(f'<@{os.getenv("SENDERID")}> Michael did not wake up, sending £5 to <@{os.getenv("RECEIVERID")}>')
+            streak = 0
         else:
-            print("awake")
+            streak += 1
+            await channel.send(f'<@{os.getenv("SENDERID")}> has woke up at 5am for {streak} days in a row!')
     awake = False
     return
 
-is_awake.start()
-
 client.run(os.getenv('TOKEN'))
+
