@@ -32,6 +32,7 @@ async def is_awake():
     channel = client.get_channel(int(os.getenv('CHANNELID')))  # notification channel
     time_now = datetime.datetime.now().time()
     if time_now > datetime.time(3,55) and time_now < datetime.time(4,0):
+        await channel.send(f'<@{os.getenv("SENDERID")}> has 15 minutes to wake up, otherwise he is losing £5')
         await asyncio.sleep(900)
         if not awake:
             await channel.send(f'<@{os.getenv("SENDERID")}> Michael did not wake up, sending £5 to <@{os.getenv("RECEIVERID")}>')
