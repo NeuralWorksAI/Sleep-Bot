@@ -19,10 +19,10 @@ def build_request_body():
         {
           "amount": {
             "currency_code": "USD",
-            "value": "1.00"
+            "value": "5.00"
           },
           "payee": {
-            "email_address": "petkanicsandra@gmail.com"
+            "email_address": os.getenv("RECEIVER_EMAIL")
           }
         }
       ]
