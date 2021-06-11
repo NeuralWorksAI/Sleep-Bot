@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "discord.js": "^12.5.3"
+    "discord.js": "^12.5.3",
+    "mongodb": "^3.6.9",
+    "mongoose": "^5.12.13"
   },
   "main": "index.js"
 }
