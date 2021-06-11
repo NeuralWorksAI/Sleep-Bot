@@ -1,6 +1,0 @@
-{
-  "prefix": "!s",
-  "token": "Your token",
-  "channelid": "Your channel",
-  "mongodbURI": "setup mongo db and add URI here"
-}

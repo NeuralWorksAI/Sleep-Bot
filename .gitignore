@@ -57,3 +57,4 @@ Thumbs.db
 !.env.example
 
 config.json
+venv
