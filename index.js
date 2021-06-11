@@ -1,8 +1,8 @@
 const config = require("./config.json");
 const fs = require("fs");
 const Discord = require("discord.js");
-const { MongoClient } = require("mongodb");
 const mongoose = require("mongoose");
+const Users = require("./models/schema.js");
 
 mongoose
   .connect(config.mongodbURI, {
@@ -11,6 +11,23 @@ mongoose
   })
   .then((result) => console.log("connected to db"))
   .catch((err) => console.log(err));
+
+// // test
+// const users = new Users({
+//   username: "00mb",
+//   timezone: "GMT",
+//   start: "2300",
+//   finish: "0500",
+// });
+
+// users
+//   .save()
+//   .then((result) => {
+//     console.log(result);
+//   })
+//   .catch((err) => {
+//     console.log(err);
+//   });
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();

@@ -1,3 +1,13 @@
+const Users = require("../models/schema.js");
+
+// test
+const users = new Users({
+  username: "test",
+  timezone: "GMT",
+  start: "2300",
+  finish: "0500",
+});
+
 module.exports = {
   name: "setsleep",
   description:
@@ -6,6 +16,14 @@ module.exports = {
   args: true,
   usage: "<start sleep> <wake up>",
   execute(message, args) {
+    users
+      .save()
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     message.channel.send("Test");
   },
 };
