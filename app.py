@@ -33,8 +33,8 @@ async def is_awake():
 
     channel = client.get_channel(int(os.getenv('CHANNELID')))  # notification channel
     time_now = datetime.datetime.now().time()
-    if time_now > datetime.time(6,30) and time_now < datetime.time(6,40):
-        await channel.send(f'It is 6:30am in the UK, and <@{os.getenv("USERID")}> has 15 minutes to wake up.')
+    if time_now > datetime.time(4,25) and time_now < datetime.time(4,35):
+        await channel.send(f'It is 5:30am in the UK, and <@{os.getenv("USERID")}> has 15 minutes to wake up.')
         await asyncio.sleep(900)
         if not awake:
             await channel.send(f'<@{os.getenv("USERID")}> Michael did not wake up, streak restarting fs')
