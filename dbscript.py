@@ -16,15 +16,20 @@ class Connection():
         print("Added new record")
         self.conn.commit()
 
-    def get_all(self):
-        self.cur.execute("SELECT * FROM users")
-        records = self.cur.fetchall()
-        print(records)
+    def get_user(self, id):
+        self.cur.execute("SELECT * FROM users WHERE id = %s", (id,))
+        user = self.cur.fetchone()
+        print(user)
 
     def get_ids(self):
         self.cur.execute("SELECT id FROM users")
-        records = self.cur.fetchall()
-        print(records)
+        return [item[0] for item in self.cur.fetchall()]
+
+    def delete_user(self, id):
+        print(type(id))
+        self.cur.execute("DELETE FROM users WHERE id = %s", (10,))
+        print("deleted user")
+        self.conn.commit()
 
     def close_connection(self):
         self.cur.close()

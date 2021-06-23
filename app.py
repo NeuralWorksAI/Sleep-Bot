@@ -1,5 +1,5 @@
 # This code ಠ_ಠ fml
-
+import re
 import datetime
 import discord
 from discord.ext import tasks
@@ -10,10 +10,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from dbscript import Connection
-
 connection = Connection()
 
-#connection.new_record(1111, 0, "idex", "test")
+#connection.new_record(769598266173030470, 0, datetime.time(5,0), "bst")
 
 streak = 0
 registered_users = [769598266173030470]
@@ -29,10 +28,9 @@ def timenow():
 async def up(ctx):
     global progess_time
     global streak
-    connection.get_ids()
     if ctx.channel.id != int(os.getenv('CHANNELID')):
         return
-    if ctx.message.author.id not in registered_users:
+    if ctx.message.author.id not in connection.get_ids():
         await ctx.channel.send(f"{ctx.message.author.mention} You have not set a time, to do so, please say $setup <time>")
         return
     if timenow() <= target_time and timenow() >= (target_time - datetime.delta(minutes=15)):
@@ -52,9 +50,27 @@ async def up(ctx):
     return
 
 @bot.command()
-async def setup(ctx, arg):
-    await ctx.channel.send(f"{ctx} {arg}")
+async def setup(ctx, goal, timezone):
+    if ctx.channel.id != int(os.getenv('CHANNELID')):
+        return
+    if ctx.message.author.id in connection.get_ids():
+        await ctx.channel.send(f"{ctx.message.author.mention} you have already setup your sleeping. To reset, use $reset (this will reset your streak as well).")
+        return
+    if goal is None or timezone is None:
+        await ctx.channel.send(f"{ctx.message.author.mention} please input parameters, the command should look like this $setup <timegoal> <timezone>")
+        return
+    if not re.match(r"[0-9][0-9]:[0-9][0-9]", goal):
+        await ctx.channel.send(f"{ctx.message.author.mention} time format does not match, please use HH:MM (for example 05:00 is 5am)")
+        return
+    print("done")
+    
     return
+
+@bot.command()
+async def reset(ctx):
+    connection.delete_user(ctx.message.author.id)
+    await ctx.channel.send(f"{ctx.message.author.mention} Removed user from db, please now use $setup")
+        
 
 @tasks.loop(seconds=60)
 async def get_active_times():
