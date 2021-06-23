@@ -9,25 +9,61 @@ import asyncio
 from dotenv import load_dotenv
 load_dotenv()
 
-# intents = discord.Intents().all()
-# awake = False
-# streak = 0
-# client = discord.Client(intents=intents)
+from dbscript import Connection
+
+connection = Connection()
+
+#connection.new_record(1111, 0, "idex", "test")
+
+streak = 0
+registered_users = [769598266173030470]
+progess_time = datetime.time(13,6)
 target_time = datetime.time(5,0)
+
 bot = commands.Bot(command_prefix="$")
+
+def timenow():
+    return datetime.datetime.now().time()
+
+@bot.command()
+async def up(ctx):
+    global progess_time
+    global streak
+    connection.get_ids()
+    if ctx.channel.id != int(os.getenv('CHANNELID')):
+        return
+    if ctx.message.author.id not in registered_users:
+        await ctx.channel.send(f"{ctx.message.author.mention} You have not set a time, to do so, please say $setup <time>")
+        return
+    if timenow() <= target_time and timenow() >= (target_time - datetime.delta(minutes=15)):
+        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {streak} days!")
+        progess_time = target_time
+        streak += 1
+        return
+    if timenow() > progess_time:
+        await ctx.channel.send(f"{ctx.message.author.mention} Your missed your target of {progess_time}, your new target is {timenow()}")
+        progess_time = timenow()
+    elif timenow() <= progess_time and timenow() > target_time:
+        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you beat your target time of {progess_time}, your new target is {timenow()}")
+        progess_time = timenow()
+    else:
+        await ctx.channel.send(f"You have woken up for your target goal of {target_time} too early. Either that or the bot is bugged idk.")
+    streak = 0
+    return
+
+@bot.command()
+async def setup(ctx, arg):
+    await ctx.channel.send(f"{ctx} {arg}")
+    return
+
+@tasks.loop(seconds=60)
+async def get_active_times():
+    return
 
 @bot.event
 async def on_ready():
     print(f'We have logged in as {bot.user.name}')
-    # is_awake.start()
-
-@bot.command()
-async def up(ctx):
-    if ctx.channel.id != int(os.getenv('CHANNELID')):
-        return
-    if datetime.datetime.now().time() > target_time:
-        pass
-    await ctx.channel.send("hello")
+    get_active_times.start()
 
 # @tasks.loop(seconds=60)
 # async def is_awake():
@@ -50,5 +86,4 @@ async def up(ctx):
 #     return
 
 bot.run(os.getenv('TOKEN'))
-# client.run(os.getenv('TOKEN'))
 
