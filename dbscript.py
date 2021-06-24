@@ -18,16 +18,18 @@ class Connection():
 
     def get_user(self, id):
         self.cur.execute("SELECT * FROM users WHERE id = %s", (id,))
-        user = self.cur.fetchone()
-        print(user)
+        return [item for item in self.cur.fetchone()]
 
     def get_ids(self):
         self.cur.execute("SELECT id FROM users")
         return [item[0] for item in self.cur.fetchall()]
 
+    def get_leaderboard(self):
+        self.cur.execute("SELECT id, streak FROM users ORDER BY streak DESC")
+        return [item for item in self.cur.fetchmany(10)]
+
     def delete_user(self, id):
-        print(type(id))
-        self.cur.execute("DELETE FROM users WHERE id = %s", (10,))
+        self.cur.execute("DELETE FROM users WHERE id = %s", (id,))
         print("deleted user")
         self.conn.commit()
 

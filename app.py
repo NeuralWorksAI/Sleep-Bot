@@ -12,7 +12,11 @@ load_dotenv()
 from dbscript import Connection
 connection = Connection()
 
-#connection.new_record(769598266173030470, 0, datetime.time(5,0), "bst")
+from timezones import get_time, utc_to_local
+
+get_time("00:40", "CAT")
+
+#connection.new_record("769598266173030470", 0, datetime.time(5,0), "bst")
 
 streak = 0
 registered_users = [769598266173030470]
@@ -30,9 +34,11 @@ async def up(ctx):
     global streak
     if ctx.channel.id != int(os.getenv('CHANNELID')):
         return
-    if ctx.message.author.id not in connection.get_ids():
+    if str(ctx.message.author.id) not in connection.get_ids():
         await ctx.channel.send(f"{ctx.message.author.mention} You have not set a time, to do so, please say $setup <time>")
         return
+    user = connection.get_user(str(ctx.message.author.id))
+    print(user)
     if timenow() <= target_time and timenow() >= (target_time - datetime.delta(minutes=15)):
         await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {streak} days!")
         progess_time = target_time
@@ -53,24 +59,45 @@ async def up(ctx):
 async def setup(ctx, goal, timezone):
     if ctx.channel.id != int(os.getenv('CHANNELID')):
         return
-    if ctx.message.author.id in connection.get_ids():
-        await ctx.channel.send(f"{ctx.message.author.mention} you have already setup your sleeping. To reset, use $reset (this will reset your streak as well).")
-        return
-    if goal is None or timezone is None:
-        await ctx.channel.send(f"{ctx.message.author.mention} please input parameters, the command should look like this $setup <timegoal> <timezone>")
-        return
-    if not re.match(r"[0-9][0-9]:[0-9][0-9]", goal):
-        await ctx.channel.send(f"{ctx.message.author.mention} time format does not match, please use HH:MM (for example 05:00 is 5am)")
-        return
-    print("done")
-    
+    if str(ctx.message.author.id) in connection.get_ids():
+        await ctx.channel.send(f"{ctx.message.author.mention} You have already setup your sleeping. To reset, use $reset (this will reset your streak as well).")
+    elif goal is None or timezone is None:
+        await ctx.channel.send(f"{ctx.message.author.mention} Please input parameters, the command should look like this $setup <timegoal> <timezone>")
+    elif not re.match(r"[0-9][0-9]:[0-9][0-9]", goal):
+        await ctx.channel.send(f"{ctx.message.author.mention} Time format does not match, please use HH:MM (for example 05:00 is 5am)")
+    elif isinstance(timezone, str):
+        timezone = timezone.upper()
+        format_time = get_time(goal, timezone)
+        if format_time is None:
+            await ctx.channel.send(f"{ctx.message.author.mention} Your timezone is not valid, please use a timezone such as BST")
+            return
+        connection.new_record(str(ctx.message.author.id), 0, format_time, timezone)
+        await ctx.channel.send(f"{ctx.message.author.mention} Your time has been set!")
     return
 
 @bot.command()
 async def reset(ctx):
-    connection.delete_user(ctx.message.author.id)
-    await ctx.channel.send(f"{ctx.message.author.mention} Removed user from db, please now use $setup")
-        
+    if ctx.channel.id != int(os.getenv('CHANNELID')):
+        return
+    if str(ctx.message.author.id) not in connection.get_ids():
+        await ctx.channel.send(f"{ctx.message.author.mention} You are not found in the database, to setup please say $setup <timegoal> <timezone>")
+        return
+    connection.delete_user(str(ctx.message.author.id))
+    await ctx.channel.send(f"{ctx.message.author.mention} Reset user, please now use $setup")
+
+@bot.command()
+async def leaderboard(ctx):
+    user = await bot.fetch_user(769598266173030470)
+    text = f"{ctx.message.author.mention} Top active streaks:\n\n"
+    leaderboard = connection.get_leaderboard()
+    for user in leaderboard:
+        username = await bot.fetch_user(int(user[0]))
+        text += f"{username}: {user[1]} days\n"
+    await ctx.channel.send(f"{text}")
+
+@bot.command()
+async def mystats(ctx):
+    pass
 
 @tasks.loop(seconds=60)
 async def get_active_times():
