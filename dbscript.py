@@ -12,8 +12,7 @@ class Connection():
         self.cur = self.conn.cursor()
 
     def new_record(self, name, streak, time_goal, timezone):
-        self.cur.execute("INSERT INTO users VALUES (%s, %s, %s, %s)", (name, streak, time_goal, timezone))
-        print("Added new record")
+        self.cur.execute("INSERT INTO users VALUES (%s, %s, %s, %s, %s)", (name, streak, timezone, time_goal, time_goal))
         self.conn.commit()
 
     def get_user(self, id):
@@ -30,12 +29,10 @@ class Connection():
 
     def delete_user(self, id):
         self.cur.execute("DELETE FROM users WHERE id = %s", (id,))
-        print("deleted user")
         self.conn.commit()
 
     def close_connection(self):
         self.cur.close()
         self.conn.close()
-        print("Connection closed")
 
 

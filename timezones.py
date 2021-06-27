@@ -48,7 +48,6 @@ def get_time(time, abb):
             newtime = datetime.time(int(time[0])+altered_tz,int(time[1])+30)
     else:
         newtime = datetime.time(int(time[0])+tz,int(time[1]))
-    print(newtime)
     return newtime
 
 def utc_to_local(time, abb):
@@ -62,5 +61,4 @@ def utc_to_local(time, abb):
             newtime = datetime.time(int(time[0])-altered_tz,int(time[1])-30)
     else:
         newtime = datetime.time(int(time[0])-tz,int(time[1]))
-    print(newtime)
     return newtime

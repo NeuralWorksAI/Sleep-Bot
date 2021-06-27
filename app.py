@@ -38,7 +38,6 @@ async def up(ctx):
         await ctx.channel.send(f"{ctx.message.author.mention} You have not set a time, to do so, please say $setup <time>")
         return
     user = connection.get_user(str(ctx.message.author.id))
-    print(user)
     if timenow() <= target_time and timenow() >= (target_time - datetime.delta(minutes=15)):
         await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {streak} days!")
         progess_time = target_time
@@ -87,7 +86,8 @@ async def reset(ctx):
 
 @bot.command()
 async def leaderboard(ctx):
-    user = await bot.fetch_user(769598266173030470)
+    if ctx.channel.id != int(os.getenv('CHANNELID')):
+        return
     text = f"{ctx.message.author.mention} Top active streaks:\n\n"
     leaderboard = connection.get_leaderboard()
     for user in leaderboard:
@@ -97,7 +97,14 @@ async def leaderboard(ctx):
 
 @bot.command()
 async def mystats(ctx):
-    pass
+    if ctx.channel.id != int(os.getenv('CHANNELID')):
+        return
+    if str(ctx.message.author.id) not in connection.get_ids():
+        await ctx.channel.send(f"{ctx.message.author.mention} You are not found in the database, to setup please say $setup <timegoal> <timezone>")
+        return
+    user = connection.get_user(str(ctx.message.author.id))
+    text = f"{ctx.message.author.mention} Goal: {utc_to_local(user[3], user[2])}, current wake up time: {utc_to_local(user[4], user[2])}, current streak: {user[1]} ({user[2]})"
+    await ctx.channel.send(text)
 
 @tasks.loop(seconds=60)
 async def get_active_times():
