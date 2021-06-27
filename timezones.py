@@ -1,4 +1,5 @@
 import datetime
+from math import floor
 
 timezones = {
 "GMT":0,
@@ -6,7 +7,7 @@ timezones = {
 "ECT":1,
 "EET":2,
 "ART":2,
-"EAT":3,
+"EAT":2,
 "MET":3.5,
 "NET":4,
 "PLT":5,
@@ -32,33 +33,41 @@ timezones = {
 "CNT":20.5,
 "AGT":21,
 "BET":21,
-"CAT":23
+"CAT":2
 }
 
-def get_time(time, abb):
-    if abb not in timezones:
-        return
-    time = time.split(":")
-    tz = timezones[abb]
-    if isinstance(tz, float):
-        altered_tz = int(tz - 0.5)
-        if int(time[1]) + 30 > 60:
-            newtime = datetime.time(int(time[0])+altered_tz+1,int(time[1])-30)
-        else:
-            newtime = datetime.time(int(time[0])+altered_tz,int(time[1])+30)
-    else:
-        newtime = datetime.time(int(time[0])+tz,int(time[1]))
-    return newtime
+def intdatetime(hours, minutes):
+    if minutes > 59:
+        minutes -= 60
+        hours += 1
+    elif minutes < 0:
+        minutes += 60
+        hours -= 1
+    if hours > 23:
+        hours -= 24
+    elif hours < 0:
+        hours += 24
+    print(hours, minutes)
+    return datetime.time(hours, minutes)
 
-def utc_to_local(time, abb):
+
+def get_time(time, tz):
+    time = str(time)
     time = time.split(":")
-    tz = timezones[abb]
+    hours = int(time[0])-floor(tz)
+    minutes = int(time[1])
     if isinstance(tz, float):
-        altered_tz = int(tz - 0.5)
-        if int(time[1]) + 30 > 60:
-            newtime = datetime.time(int(time[0])-altered_tz-1,int(time[1])+30)
-        else:
-            newtime = datetime.time(int(time[0])-altered_tz,int(time[1])-30)
-    else:
-        newtime = datetime.time(int(time[0])-tz,int(time[1]))
-    return newtime
+        minutes -= 30
+    return intdatetime(hours, minutes)
+
+def utc_to_local(time, tz):
+    #Okay this is a really terrible way of doing this but it is 3am
+    time = str(time)
+    time = time.split(":")
+    hours = floor(tz)+int(time[0])
+    minutes = int(time[1])
+    if isinstance(tz, float):
+        minutes += 30
+    return intdatetime(hours, minutes)
+
+print(utc_to_local("18:00", 5.5))

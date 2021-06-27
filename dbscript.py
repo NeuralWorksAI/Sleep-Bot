@@ -23,6 +23,10 @@ class Connection():
         self.cur.execute("SELECT id FROM users")
         return [item[0] for item in self.cur.fetchall()]
 
+    def update_current(self, id, current):
+        self.cur.execute("UPDATE users SET timecurrent = %s WHERE id = %s", (current,id))
+        self.conn.commit()
+
     def get_leaderboard(self):
         self.cur.execute("SELECT id, streak FROM users ORDER BY streak DESC")
         return [item for item in self.cur.fetchmany(10)]
