@@ -14,8 +14,6 @@ connection = Connection()
 
 from timezones import get_time, utc_to_local
 
-#connection.new_record("769598266173030470", 0, datetime.time(5,0), "bst")
-
 bot = commands.Bot(command_prefix="$")
 cooldown = []
 
@@ -70,7 +68,6 @@ async def up(ctx):
         connection.update_active(strid, datetime.datetime.now())
     else:
         connection.add_to_active(strid, datetime.datetime.now())
-
     if nptime.from_time(timenow(user[2])) - timedelta(minutes=15) <= goal and nptime.from_time(timenow(user[2])) + timedelta(minutes=15) >= goal:
         await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {user[1]} days!")
         connection.update_current(strid, get_time(goal, user[2]))
@@ -145,6 +142,12 @@ async def mystats(ctx):
     text = f"{ctx.message.author.mention} Goal: {dtstring(goal)}, current wake up time: {dtstring(current)}, current streak: {user[1]} (timezone: {user[2]})"
     await ctx.channel.send(text)
 
+@bot.command()
+async def site(ctx):
+    if ctx.channel.id != int(os.getenv('CHANNELID')):
+        return
+    await ctx.channel.send(f"{ctx.message.author.mention} View the live leaderboards: **neuralworks.group/Sleep-Bot**")
+
 #Tests
 # @bot.command()
 # async def whattime(ctx, time, timezone):
@@ -154,26 +157,6 @@ async def mystats(ctx):
 async def on_ready():
     print(f'We have logged in as {bot.user.name}')
     get_active_times.start()
-
-# @tasks.loop(seconds=60)
-# async def is_awake():
-#     global awake
-#     global streak
-
-#     channel = client.get_channel(int(os.getenv('CHANNELID')))  # notification channel
-#     time_now = datetime.datetime.now().time()
-#     if time_now > datetime.time(4,25) and time_now < datetime.time(4,35):
-#         await channel.send(f'It is 5:30am in the UK, and <@{os.getenv("USERID")}> has 15 minutes to wake up.')
-#         await asyncio.sleep(900)
-#         if not awake:
-#             await channel.send(f'<@{os.getenv("USERID")}> Michael did not wake up, streak restarting')
-#             streak = 0
-#         else:
-#             streak += 1
-#             await channel.send(f'<@{os.getenv("USERID")}> has woke up at 5am for {streak} days in a row! Jeez what a pro')
-#     time_now = datetime.datetime.now().time()
-#     awake = False
-#     return
 
 bot.run(os.getenv('TOKEN'))
 
