@@ -1,6 +1,8 @@
 # This code ಠ_ಠ fml
 import re
+from datetime import datetime, time, timedelta
 import datetime
+from nptime import nptime
 import discord
 from discord.ext import tasks
 from discord.ext import commands
@@ -21,7 +23,11 @@ active_users = [769598266173030470]
 
 bot = commands.Bot(command_prefix="$")
 
-def timenow():
+def timenow(timezone):
+    return utc_to_local(datetime.datetime.utcnow().time(), timezone)
+
+def timenowutc():
+    print(datetime.datetime.utcnow().time())
     return datetime.datetime.utcnow().time()
 
 def dtstring(time):
@@ -41,23 +47,22 @@ async def up(ctx):
         await ctx.channel.send(f"{ctx.message.author.mention} You have not set a time, to do so, please say $setup <time>")
         return
     user = connection.get_user(str(ctx.message.author.id))
-    goal = strdatetime(user[3])
-    local_goal = utc_to_local(user[3], user[2])
-    local_current = utc_to_local(user[4], user[2])
-    current = strdatetime(user[4])
-    if timenow() <= goal and timenow() >= (goal - datetime.delta(minutes=15)):
+    goal = utc_to_local(user[3], user[2])
+    current = utc_to_local(user[4], user[2])
+    if nptime.from_time(timenow(user[2])) - timedelta(minutes=15) <= goal and nptime.from_time(timenow(user[2])) + timedelta(minutes=15) >= goal:
         await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {streak} days!")
-        connection.update_current(str(ctx.message.author.id), goal)
+        connection.update_current(str(ctx.message.author.id), get_time(goal, user[2]))
         streak += 1
         return
-    if timenow() > current:
-        await ctx.channel.send(f"{ctx.message.author.mention} Your missed your target of {dtstring(local_current)}, your new target is {dtstring(utc_to_local(timenow(), user[2]))}")
-        connection.update_current(str(ctx.message.author.id), timenow())
-    elif timenow() <= current and timenow() > goal:
-        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you beat your target time of {dtstring(local_current)}, your new target is {dtstring(utc_to_local(timenow(), user[2]))}")
-        connection.update_current(str(ctx.message.author.id), timenow())
+    if timenow(user[2]) <= current and timenow(user[2]) > goal:
+        new_current = nptime.from_time(timenow(user[2])) - timedelta(minutes=15)
+        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you beat your target time of {dtstring(current)}, your new target is {dtstring(new_current)}")
+        connection.update_current(str(ctx.message.author.id), get_time(new_current, user[2]))
+    elif timenow(user[2]) > current:
+        await ctx.channel.send(f"{ctx.message.author.mention} Your missed your target of {dtstring(current)}, your new target is {dtstring(timenow(user[2]))}")
+        connection.update_current(str(ctx.message.author.id), timenowutc())
     else:
-        await ctx.channel.send(f"You have woken up for your target goal of {dtstring(local_goal)} too early. Either that or the bot is bugged idk.")
+        await ctx.channel.send(f"You have woken up for your target goal of {dtstring(goal)} too early. Either that or the bot is bugged idk.")
     streak = 0
     return
 
@@ -77,10 +82,8 @@ async def setup(ctx, goal=None, timezone=None):
             return
         sign = timezone[0]
         timezone = int(timezone[1:3]) + (int(timezone[4:6])/60)
-        print(timezone)
         if sign == "-":
             timezone = 24 - timezone
-        print(timezone)
         format_time = get_time(goal, timezone)
         connection.new_record(str(ctx.message.author.id), 0, format_time, timezone)
         await ctx.channel.send(f"{ctx.message.author.mention} Your time has been set!")
