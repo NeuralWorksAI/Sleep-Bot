@@ -1,13 +1,11 @@
 # This code ಠ_ಠ fml
 import re
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 import datetime
 from nptime import nptime
-import discord
 from discord.ext import tasks
 from discord.ext import commands
 import os
-import asyncio
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -18,16 +16,13 @@ from timezones import get_time, utc_to_local
 
 #connection.new_record("769598266173030470", 0, datetime.time(5,0), "bst")
 
-streak = 0
-active_users = [769598266173030470]
-
 bot = commands.Bot(command_prefix="$")
+cooldown = []
 
 def timenow(timezone):
     return utc_to_local(datetime.datetime.utcnow().time(), timezone)
 
 def timenowutc():
-    print(datetime.datetime.utcnow().time())
     return datetime.datetime.utcnow().time()
 
 def dtstring(time):
@@ -38,32 +33,59 @@ def strdatetime(time):
     newtime = time.split(":")
     return datetime.time(int(newtime[0]),int(newtime[1]))
 
+#Tasks
+@tasks.loop(hours=1)
+async def get_active_times():
+    channel = bot.get_channel(int(os.getenv("CHANNELID")))
+    active_list = connection.get_active_users()
+    for user in active_list:
+        date_time_obj = datetime.datetime.strptime(user[1], '%Y-%m-%d %H:%M:%S.%f')
+        if date_time_obj + timedelta(days=1) < datetime.datetime.now():
+            await channel.send(f"<@{user[0]}> You have ran out of time to wake up, reseting streak.")
+            connection.remove_active(user[0])
+            connection.reset_streak(user[0])
+
+@tasks.loop(hours=12)
+async def cooldown_loop():
+    cooldown = []
+
+#Commands
 @bot.command()
 async def up(ctx):
-    global streak
+    global cooldown
     if ctx.channel.id != int(os.getenv('CHANNELID')):
         return
-    if str(ctx.message.author.id) not in connection.get_ids():
+    strid = str(ctx.message.author.id)
+    if strid not in connection.get_ids():
         await ctx.channel.send(f"{ctx.message.author.mention} You have not set a time, to do so, please say $setup <time>")
         return
-    user = connection.get_user(str(ctx.message.author.id))
+    if strid in cooldown:
+        await ctx.channel.send(f"{ctx.message.author.mention} You have already woken up today!")
+        return
+    cooldown.append(strid)
+    user = connection.get_user(strid)
     goal = utc_to_local(user[3], user[2])
     current = utc_to_local(user[4], user[2])
+    if strid in connection.get_active_ids():
+        connection.update_active(strid, datetime.datetime.now())
+    else:
+        connection.add_to_active(strid, datetime.datetime.now())
+
     if nptime.from_time(timenow(user[2])) - timedelta(minutes=15) <= goal and nptime.from_time(timenow(user[2])) + timedelta(minutes=15) >= goal:
-        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {streak} days!")
-        connection.update_current(str(ctx.message.author.id), get_time(goal, user[2]))
-        streak += 1
+        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {user[1]} days!")
+        connection.update_current(strid, get_time(goal, user[2]))
+        connection.increment_streak(strid)
         return
     if timenow(user[2]) <= current and timenow(user[2]) > goal:
         new_current = nptime.from_time(timenow(user[2])) - timedelta(minutes=15)
         await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you beat your target time of {dtstring(current)}, your new target is {dtstring(new_current)}")
-        connection.update_current(str(ctx.message.author.id), get_time(new_current, user[2]))
+        connection.update_current(strid, get_time(new_current, user[2]))
     elif timenow(user[2]) > current:
         await ctx.channel.send(f"{ctx.message.author.mention} Your missed your target of {dtstring(current)}, your new target is {dtstring(timenow(user[2]))}")
-        connection.update_current(str(ctx.message.author.id), timenowutc())
+        connection.update_current(strid, timenowutc())
     else:
         await ctx.channel.send(f"You have woken up for your target goal of {dtstring(goal)} too early. Either that or the bot is bugged idk.")
-    streak = 0
+    connection.reset_streak(strid)
     return
 
 @bot.command()
@@ -123,13 +145,10 @@ async def mystats(ctx):
     text = f"{ctx.message.author.mention} Goal: {dtstring(goal)}, current wake up time: {dtstring(current)}, current streak: {user[1]} (timezone: {user[2]})"
     await ctx.channel.send(text)
 
-@bot.command()
-async def whattime(ctx, time, timezone):
-    await ctx.channel.send(utc_to_local(time, timezone.upper()))
-
-@tasks.loop(seconds=60)
-async def get_active_times():
-    return
+#Tests
+# @bot.command()
+# async def whattime(ctx, time, timezone):
+#     await ctx.channel.send(utc_to_local(time, timezone.upper()))
 
 @bot.event
 async def on_ready():
