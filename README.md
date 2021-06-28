@@ -4,7 +4,13 @@ A discord bot that tracks sleep and creates habit with gamification.
 
 ## Docs
 
-### $setup <goal> 
+### $setup <timegoal [HH:MM]> <timezone [+/-HH:MM]>   
+This is probably the only confusing command. Timegoal represents when you want to wake up in 24 hour time (ie 05:00 would be 5am). Timezone represents your offset relative to UTC. For example, IST is +5.30 ahead of UTC, so the timezone would be +05:30. EST would be -05:00 etc. An example of the full command: **$setup 05:00 +05:30** 
+
+### $up  
+As soon as you wake up to reach your goal, you will be 
+
+
 
 
 ## Setup  
