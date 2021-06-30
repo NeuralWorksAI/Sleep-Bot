@@ -25,8 +25,9 @@ View a live version of the leaderboards, along with help on: [NeuralWorks Sleep 
 ## Setup  
 - venv (optional)
 - pip install -r "requirements.txt"
+- Create a postgres db  
 - Fill out env (rename to .env)
-- Setup relational db with the following schema (cba setting up the docker, but feel free to do so!):
+
 
 **users**  
 id [text] [PK]  
@@ -34,6 +35,7 @@ streak [int] [default=0]
 timezone [real]  
 timegoal [text]  
 timecurrent [text]  
+username [text]  
 
 **activeusers**  
 id [text] [PK]  
