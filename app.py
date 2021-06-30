@@ -2,7 +2,7 @@ from flask import Flask, render_template
 from dbscript import Connection
 from timezones import utc_to_local
 
-connection = Connection()
+
 app = Flask(__name__)
 
 def dtstring(time):
@@ -11,6 +11,7 @@ def dtstring(time):
 
 @app.route("/")
 def index():
+    connection = Connection()
     data = []
     raw_data = connection.get_leaderboard()
     for user in raw_data:
