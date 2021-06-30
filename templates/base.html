@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="UTF-8" />
+  <head>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/static/favicon//apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon//favicon-16x16.png">
+    <link rel="manifest" href="/static/favicon//site.webmanifest">
+    <link rel="mask-icon" href="/static/favicon//safari-pinned-tab.svg" color="#5bbad5">
+    <meta name="apple-mobile-web-app-title" content="Sleep Bot">
+    <meta name="application-name" content="Sleep Bot">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <script
+      src="https://kit.fontawesome.com/0e7cbfa068.js"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <title>NeuralWorks Sleep - Leaderboard</title>
+  </head>
+  <body>
+    <section id="bg">
+        <div class="container">
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <a href="{{ url_for('index') }}"
+                >
+                <h2 id="title">SLEEP BOT</h2></a
+              >
+            </div>
+            <div class="col-12 col-md-6 text-right ml-auto">
+              <ul class="nav">
+                <li class="nav-item">
+                  <a class="underline lb" href="{{ url_for('index') }}"
+                    >Leaderboard</a
+                  >
+                </li>
+                <li class="nav-item">
+                  <a class="underline help" href="{{ url_for('help') }}"
+                    >Help</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+          {% block content %} {% endblock %}
+          <footer>
+            <h5>A Project By NeuralWorks ❤️</h2>
+          </footer>
+  </body>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+    crossorigin="anonymous"
+  ></script>
+</html>

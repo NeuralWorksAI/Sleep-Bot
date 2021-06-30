@@ -1,0 +1,37 @@
+{% extends 'base.html' %} {% block content %}
+<main>
+<style>
+    p, li {
+        color: grey;
+    }
+    .lb {
+    color: #999;
+  }
+</style>
+<p>A discord bot that tracks sleep and creates habit with gamification.</p>
+<h2 id="docs"><u>Docs</u></h2>
+<h3 id="-setup-timegoal-hh-mm-timezone-hh-mm-">$setup <timegoal [HH:MM]> <timezone [+/-HH:MM]></h3>
+<p>This is probably the only confusing command. Timegoal represents when you want to wake up in 24 hour time (ie 05:00 would be 5am). Timezone represents your offset relative to UTC. For example, IST is +5.30 ahead of UTC, so the timezone would be +05:30. EST would be -05:00 etc. An example of the full command: <strong>$setup 05:00 +05:30</strong> </p>
+<h3 id="-up">$up</h3>
+<p>As soon as you wake up you should send the command $up into the channel. This acts as confirmation that you are up at the certain time. Even when you miss your goal, you should still type $up regardless as you will be given a new goal to wake up. If you do not write $up in 24 hours since your last command, you will automatically lose your streak.  </p>
+<h3 id="-reset">$reset</h3>
+<p>Resets your goal, This will also remove your streak. Once you have reset you will need to use $setup again.</p>
+<h3 id="-leaderboard">$leaderboard</h3>
+<p>View the leaderboard ranked by longest active streak.  </p>
+<h3 id="-mystats">$mystats</h3>
+<p>View your stats including current streak, current goal, target goal and timezone.  </p>
+<h3 id="-site">$site</h3>
+<p>View a live version of the leaderboards, along with help on: <a href="https://neuralworks.group/Sleep-Bot/">NeuralWorks Sleep Bot Site</a>  </p>
+<h2 id="setup"><u>Setup</u></h2>
+<ul>
+<li>venv (optional)</li>
+<li>pip install -r &quot;requirements.txt&quot;</li>
+<li>Create a postgres db  </li>
+<li>Fill out env (rename to .env)</li>
+</ul>
+<p><strong>users</strong><br>id [text] [PK]<br>streak [int] [default=0]<br>timezone [real]<br>timegoal [text]<br>timecurrent [text]<br>username [text]  </p>
+<p><strong>activeusers</strong><br>id [text] [PK]<br>time [text  </p>
+<p><strong>open to all pull requests!</strong></p>
+
+{% endblock %}
+</main>

@@ -1,0 +1,24 @@
+from flask import Flask, render_template
+from dbscript import Connection
+from timezones import utc_to_local
+
+connection = Connection()
+app = Flask(__name__)
+
+def dtstring(time):
+    newtime = str(time).split(":")
+    return newtime[0]+":"+newtime[1]
+
+@app.route("/")
+def index():
+    data = []
+    raw_data = connection.get_leaderboard()
+    for user in raw_data:
+        time = utc_to_local(user[2], user[3])
+        data.append([user[0], user[1], dtstring(time)])
+    print(data)
+    return render_template("index.html", leaderboard=data)
+
+@app.route("/help")
+def help():
+    return render_template("help.html")

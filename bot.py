@@ -104,7 +104,9 @@ async def setup(ctx, goal=None, timezone=None):
         if sign == "-":
             timezone = 24 - timezone
         format_time = get_time(goal, timezone)
-        connection.new_record(str(ctx.message.author.id), 0, format_time, timezone)
+        username = await bot.fetch_user(int(ctx.message.author.id))
+        username = str(username)
+        connection.new_record(str(ctx.message.author.id), 0, format_time, timezone, username)
         await ctx.channel.send(f"{ctx.message.author.mention} Your time has been set!")
     return
 
@@ -112,10 +114,14 @@ async def setup(ctx, goal=None, timezone=None):
 async def reset(ctx):
     if ctx.channel.id != int(os.getenv('CHANNELID')):
         return
-    if str(ctx.message.author.id) not in connection.get_ids():
+    strid = str(ctx.message.author.id)
+    if strid not in connection.get_ids():
         await ctx.channel.send(f"{ctx.message.author.mention} You are not found in the database, to setup please say $setup <timegoal> <timezone>")
         return
-    connection.delete_user(str(ctx.message.author.id))
+    connection.delete_user(strid)
+    connection.remove_active(strid)
+    if strid in cooldown: cooldown.remove(strid)
+    cooldown.remove(strid)
     await ctx.channel.send(f"{ctx.message.author.mention} Reset user, please now use $setup")
 
 @bot.command()
@@ -125,8 +131,7 @@ async def leaderboard(ctx):
     text = f"{ctx.message.author.mention} Top active streaks:\n"
     leaderboard = connection.get_leaderboard()
     for user in leaderboard:
-        username = await bot.fetch_user(int(user[0]))
-        text += f"{username}: {user[1]} days\n"
+        text += f"{user[0]}: {user[1]} days\n"
     await ctx.channel.send(f"{text}")
 
 @bot.command()

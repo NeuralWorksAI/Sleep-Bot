@@ -1,0 +1,32 @@
+{% extends 'base.html' %} {% block content %}
+<style>
+  .help {
+    color: #999;
+  }
+</style>
+<main>
+  <h2 id="leaderboard-title">&#127942; LEADERBOARD &#127942;</h2>
+  <table>
+    <tr>
+      <th class="lb-head names" style="text-decoration: underline">NAME</th>
+      <th class="lb-head names" style="text-decoration: underline">TIME</th>
+      <th
+        class="lb-head scores"
+        style="color: #5994af; text-decoration: underline"
+      >
+        STREAK
+      </th>
+    </tr>
+    {% for entry in leaderboard %}
+    <tr>
+      <td class="names">{{ entry[0] }}</td>
+      <td class="names">{{ entry[2] }}</td>
+      <td class="scores" style="color: #437085; text-align: center">
+        {{ entry[1] }}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  {% endblock %}
+</main>

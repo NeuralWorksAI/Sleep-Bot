@@ -3,16 +3,37 @@ import os
 
 class Connection():
     def __init__(self):
+        print("Initialising db")
         self.conn = psycopg2.connect(
             host = os.getenv('HOST'), #If you are running locally this will probably be "localhost"
             database = os.getenv('DATABASE'),
             user=os.getenv('POSTGRES_USERNAME'),
-            password=os.getenv('POSTGRES_PASSWORD')
+            password=os.getenv('POSTGRES_PASSWORD'),
+            port=os.getenv('PORT')
             )
-        self.cur = self.conn.cursor()
 
-    def new_record(self, name, streak, time_goal, timezone):
-        self.cur.execute("INSERT INTO users VALUES (%s, %s, %s, %s, %s)", (name, streak, timezone, time_goal, time_goal))
+        self.cur = self.conn.cursor()
+        self.cur.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id VARCHAR ( 100 ) PRIMARY KEY,
+            streak INT,
+            timezone REAL,
+            timegoal VARCHAR ( 100 ),
+            timecurrent VARCHAR ( 100 ),
+            username VARCHAR ( 100 )
+        );
+        """)
+        self.cur.execute("""
+        CREATE TABLE IF NOT EXISTS activeusers (
+            id VARCHAR ( 100 ) PRIMARY KEY,
+            time VARCHAR ( 100 )
+        );
+        """)
+        self.conn.commit()
+
+
+    def new_record(self, name, streak, time_goal, timezone, username):
+        self.cur.execute("INSERT INTO users VALUES (%s, %s, %s, %s, %s, %s)", (name, streak, timezone, time_goal, time_goal, username))
         self.conn.commit()
 
     def get_user(self, id):
@@ -38,7 +59,7 @@ class Connection():
         self.conn.commit()
 
     def get_leaderboard(self):
-        self.cur.execute("SELECT id, streak FROM users ORDER BY streak DESC")
+        self.cur.execute("SELECT username, streak, timegoal, timezone FROM users ORDER BY streak DESC")
         return [item for item in self.cur.fetchmany(10)]
 
     def delete_user(self, id):

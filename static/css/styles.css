@@ -1,0 +1,192 @@
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+body {
+  background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
+  min-height: 100vh;
+  background-attachment: fixed;
+  padding-bottom: 2rem;
+}
+
+* {
+  font-family: "Roboto", sans-serif;
+  font-weight: 900;
+}
+
+a {
+  text-decoration: none;
+  color: #437085;
+}
+
+a:hover {
+  color: #5994af;
+}
+
+.container {
+  margin-top: 1rem;
+}
+
+main {
+  position: relative;
+  min-height: 100vh;
+  padding-bottom: 2.5rem;
+}
+
+.center,
+main {
+  animation: fadeInAnimation ease 0.5s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.play-center {
+  height: 60vh;
+  padding: 5vh;
+}
+
+#logo {
+  display: inline;
+  max-height: 2rem;
+  margin: 0 0.25rem 0.5rem 0.25rem;
+}
+
+#title {
+  display: inline;
+}
+
+.nav {
+  justify-content: flex-end;
+}
+
+.nav-item {
+  margin: 0.25rem 1rem 0 1rem;
+}
+
+#result-img {
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  border-radius: 0.5rem;
+  margin: 1rem 0 1rem 0;
+}
+
+.button {
+  color: #fff;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 0.6rem 3rem;
+  background: #437085;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2);
+  font-size: 2rem;
+  margin: 0 0.5rem 0 0.5rem;
+}
+
+.play-button {
+  padding: 0.6rem 6rem;
+}
+
+.button:hover {
+  background: #5994af;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+input,
+textarea {
+  color: #2c3539;
+  font-weight: 900;
+}
+
+form p {
+  font-size: 2rem;
+}
+
+.start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+}
+
+table,
+th,
+td {
+  margin: auto;
+  padding: 0 3rem 0 3rem;
+  font-size: 2rem;
+}
+
+td {
+  color: #4d4d4d;
+}
+
+.left,
+.right {
+  width: auto;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+#leaderboard-title {
+  text-align: center;
+  margin: 2rem 0 2rem 0;
+}
+
+.chart {
+  max-width: 90%;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  text-align: right;
+  width: 100%;
+  height: 2.5rem;
+}
+
+/* phones */
+@media only screen and (max-width: 768px) {
+  .row,
+  .nav {
+    text-align: center;
+    justify-content: center;
+  }
+  .play-center {
+    height: 40vh;
+    padding: 5vh;
+  }
+  .grid-container {
+    grid-template-columns: auto;
+    grid-row-gap: 2rem;
+    padding-bottom: 2rem;
+  }
+  table,
+  th,
+  td {
+    font-size: 5vw;
+  }
+  .names {
+    padding: 0 3vw 0;
+  }
+  .scores {
+    padding: 0 0 0 5vw;
+  }
+}
