@@ -37,7 +37,10 @@ async def get_active_times():
     channel = bot.get_channel(int(os.getenv("CHANNELID")))
     active_list = connection.get_active_users()
     for user in active_list:
-        date_time_obj = datetime.datetime.strptime(user['time'], '%Y-%m-%d %H:%M:%S.%f')
+        now = datetime.datetime.now()
+        splitted = user['time'].split(":")
+        date_time_obj = now.replace(hour=splitted[0], minute=[1])
+        print(date_time_obj)
         if date_time_obj + timedelta(days=1) < datetime.datetime.now():
             await channel.send(f"<@{user['id']}> You have ran out of time to wake up, reseting streak.")
             connection.remove_active(user['id'])
