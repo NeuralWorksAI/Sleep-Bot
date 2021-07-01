@@ -154,7 +154,7 @@ async def mystats(ctx):
 async def site(ctx):
     if ctx.channel.id != int(os.getenv('CHANNELID')):
         return
-    await ctx.channel.send(f"{ctx.message.author.mention} View the live leaderboards: **neuralworks.group/Sleep-Bot**")
+    await ctx.channel.send(f"{ctx.message.author.mention} View the live leaderboards: **https://nw-sleep-bot.herokuapp.com/**")
 
 #Tests
 # @bot.command()
