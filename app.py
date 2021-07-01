@@ -15,9 +15,8 @@ def index():
     data = []
     raw_data = connection.get_leaderboard()
     for user in raw_data:
-        time = utc_to_local(user[2], user[3])
-        data.append([user[0], user[1], dtstring(time)])
-    print(data)
+        time = utc_to_local(user["timezone"], user["timegoal"])
+        data.append([user["id"], user["streak"], dtstring(time)])
     return render_template("index.html", leaderboard=data)
 
 @app.route("/help")
