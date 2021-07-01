@@ -14,6 +14,7 @@ def index():
     connection = Connection()
     data = []
     raw_data = connection.get_leaderboard()
+    print(raw_data)
     for user in raw_data:
         time = utc_to_local(user["timezone"], user["timegoal"])
         data.append([user["id"], user["streak"], dtstring(time)])
