@@ -9,7 +9,7 @@
   }
 </style>
 <p>A discord bot that tracks sleep and creates habit with gamification.</p>
-<h2 id="docs"><u>Docs</u></h2>
+<h2 id="docs"><u>Commands</u></h2>
 <h3 id="-setup-timegoal-hh-mm-timezone-hh-mm-">$setup <timegoal [HH:MM]> <timezone [+/-HH:MM]></h3>
 <p>This is probably the only confusing command. Timegoal represents when you want to wake up in 24 hour time (ie 05:00 would be 5am). Timezone represents your offset relative to UTC. For example, IST is +5.30 ahead of UTC, so the timezone would be +05:30. EST would be -05:00 etc. An example of the full command: <strong>$setup 05:00 +05:30</strong> </p>
 <h3 id="-up">$up</h3>
@@ -22,6 +22,8 @@
 <p>View your stats including current streak, current goal, target goal and timezone.  </p>
 <h3 id="-site">$site</h3>
 <p>View a live version of the leaderboards, along with help on: <a href="https://nw-sleep-bot.herokuapp.com/">NeuralWorks Sleep Bot Site</a>  </p>
+<h2 id="-notes"><u>Notes</u></h2>
+<p>The window for waking up is 15 minutes either side. For example the window for a 5am wake up would be 4:45 - 5:15. If you wake up ($up) outside this time, your streak will end.</p>
 <h2 id="setup"><u>Setup</u></h2>
 <ul>
 <li>venv (optional)</li>
