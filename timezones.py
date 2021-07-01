@@ -27,6 +27,10 @@ def get_time(time, tz):
 def utc_to_local(time, tz):
     time = str(time)
     time = time.split(":")
+    print(tz)
+    print(type(tz))
+    print(time)
+    print(type(time))
     hours = floor(tz)+int(time[0])
     minutes = int(time[1])
     if floor(tz) != tz:
