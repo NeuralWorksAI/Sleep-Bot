@@ -25,20 +25,7 @@ View a live version of the leaderboards, along with help on: [NeuralWorks Sleep 
 ## Setup  
 - venv (optional)
 - pip install -r "requirements.txt"
-- Create a postgres db  
+- Setup mongoDb
 - Fill out env (rename to .env)
-
-
-**users**  
-id [text] [PK]  
-streak [int] [default=0]  
-timezone [real]  
-timegoal [text]  
-timecurrent [text]  
-username [text]  
-
-**activeusers**  
-id [text] [PK]  
-time [text  
 
 __open to all pull requests!__
