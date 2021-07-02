@@ -73,7 +73,7 @@ async def up(ctx):
     else:
         connection.add_to_active(strid, datetime.datetime.now())
     if nptime.from_time(time_now) - timedelta(minutes=15) <= goal and nptime.from_time(time_now) + timedelta(minutes=15) >= goal:
-        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {user['streak']} days!")
+        await ctx.channel.send(f"{ctx.message.author.mention} Congrats, you have kept your time goal for {user['streak']+1} days!")
         connection.update_current(strid, get_time(goal, user['timezone']))
         connection.increment_streak(strid)
         return

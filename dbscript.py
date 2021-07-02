@@ -30,7 +30,7 @@ class Connection():
     def increment_streak(self, id):
         #self.cur.execute("UPDATE users SET streak = %s WHERE id = %s", (int(user[1])+1,id))
         user = self.get_user(id)
-        self.users.update_one({"id": id}, {"set": {"streak": user[1]+1}})
+        self.users.update_one({"id": id}, {"set": {"streak": user["streak"]+1}})
 
     def reset_streak(self, id):
         #self.cur.execute("UPDATE users SET streak = 0 WHERE id = %s", (id,))
