@@ -1,13 +1,9 @@
 from flask import Flask, render_template
 from dbscript import Connection
-from timezones import utc_to_local
+from timezones import utc_to_local, dtstring
 
 
 app = Flask(__name__)
-
-def dtstring(time):
-    newtime = str(time).split(":")
-    return newtime[0]+":"+newtime[1]
 
 @app.route("/")
 def index():
