@@ -22,7 +22,7 @@ View your stats including current streak, current goal, target goal and timezone
 
 ### $site
 
-View a live version of the leaderboards, along with help on: [NeuralWorks Sleep Bot Site](https://neuralworks.group/Sleep-Bot/)
+View a live version of the leaderboards, along with help on: [NeuralWorks Sleep Bot Site](https://nw-sleep-bot.herokuapp.com/)
 
 ## Setup
 
