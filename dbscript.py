@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import pymongo
 import os
 
@@ -24,19 +24,19 @@ class Connection():
         return [user["id"] for user in result]
 
     def update_current(self, id, current):
-        current += datetime.timedelta(days=1)
-        self.users.update_one({"id": id}, {"set": {"timecurrent": str(current)}})
+        current += timedelta(days=1)
+        self.users.update_one({"id": id}, {"$set": {"timecurrent": str(current)}})
 
     def update_goal(self, id, goal):
-        goal += datetime.timedelta(days=1)
-        self.users.update_one({"id": id}, {"set": {"timegoal": str(goal)}})
+        goal += timedelta(days=1)
+        self.users.update_one({"id": id}, {"$set": {"timegoal": str(goal)}})
 
     def increment_streak(self, id):
         user = self.get_user(id)
-        self.users.update_one({"id": id}, {"set": {"streak": user["streak"]+1}})
+        self.users.update_one({"id": id}, {"$set": {"streak": user["streak"]+1}})
 
     def reset_streak(self, id):
-        self.users.update_one({"id": id}, {"set": {"streak": 0}})
+        self.users.update_one({"id": id}, {"$set": {"streak": 0}})
 
     def get_leaderboard(self):
         return self.users.find({},{"username":1, "streak":1, "timegoal":1,"timezone":1,"_id":0}).sort("streak", -1).limit(10)
