@@ -19,13 +19,14 @@ bot = commands.Bot(command_prefix="$", intents=intents)
 #Tasks
 @tasks.loop(hours=48)
 async def remove_inactive_users():
-    channel = bot.get_channel(int(os.getenv("CHANNELID")))
-    active_list = connection.get_users()
-    for user in active_list:
-        user_time = user["timegoal"]
-        if datetime.utcnow() > datetime.strptime(user_time, '%Y-%m-%d %H:%M:%S.%f'):
-            await channel.send(f"<@{user['id']}> You have not been active on discord for a while. Reseting streak.")
-            connection.delete_user(user['id'])
+    if remove_inactive_users.current_loop != 0:
+        channel = bot.get_channel(int(os.getenv("CHANNELID")))
+        active_list = connection.get_users()
+        for user in active_list:
+            user_time = user["timegoal"]
+            if datetime.utcnow() > datetime.strptime(user_time, '%Y-%m-%d %H:%M:%S.%f'):
+                await channel.send(f"<@{user['id']}> You have not been active on discord for a while. Reseting streak.")
+                connection.delete_user(user['id'])
 
 @bot.event
 async def on_member_update(before, after):
