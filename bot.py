@@ -87,8 +87,7 @@ async def setup(ctx, goal=None, timezone=None):
             timezone = 24*60 - timezone
         
         user_datetime = datetime.utcnow().replace(hour=int(goal[0:2]), minute=int(goal[3:5]))
-        user_utc_time = user_datetime + timedelta(minutes=timezone)
-
+        user_utc_time = user_datetime + timedelta(minutes=timezone, days=1)
         username = await bot.fetch_user(int(ctx.message.author.id))
         username = str(username)
 
