@@ -40,7 +40,7 @@ async def on_member_update(before, after):
         if datetime.utcnow() > (time - timedelta(hours=3)):
             channel = bot.get_channel(int(os.getenv("CHANNELID")))
             if datetime.utcnow() >= (time - timedelta(hours=3)) and datetime.utcnow() < (time - timedelta(minutes=15)):
-                await channel.send(f"You have woken up for your target goal of {dtstring(time_local)}")
+                await channel.send(f"<@{strid}> You have woken up for your target goal of {dtstring(time_local)} too early")
                 connection.update_current(strid, current_time)
 
             elif datetime.utcnow() >= (time - timedelta(minutes=15)) and datetime.utcnow() <= (time + timedelta(minutes=15)):
