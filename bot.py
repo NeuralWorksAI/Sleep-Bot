@@ -84,7 +84,7 @@ async def setup(ctx, goal=None, timezone=None):
         sign = timezone[0]
         timezone = int(timezone[1:3])*60 + (int(timezone[4:6]))
         if sign == "-":
-            timezone = 24*60 - timezone
+            timezone = 0 - timezone
         
         user_datetime = datetime.utcnow().replace(hour=int(goal[0:2]), minute=int(goal[3:5]))
         user_utc_time = user_datetime + timedelta(minutes=timezone, days=1)
