@@ -162,6 +162,18 @@ footer {
   height: 2.5rem;
 }
 
+.first td {
+  color: #d4af37;
+}
+
+.second td {
+  color: #aaa9ad;
+}
+
+.third td {
+  color: #b08d57;
+}
+
 /* phones */
 @media only screen and (max-width: 768px) {
   .row,

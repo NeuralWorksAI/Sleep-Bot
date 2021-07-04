@@ -13,7 +13,7 @@ def index():
     for user in raw_data:
         time = utc_to_local(user["timegoal"], user["timezone"])
         data.append([user["username"], user["streak"], dtstring(time)])
-    return render_template("index.html", leaderboard=data)
+    return render_template("index.html", leaderboard=data, len=len(data))
 
 @app.route("/help")
 def help():

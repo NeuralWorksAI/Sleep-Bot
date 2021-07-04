@@ -17,12 +17,27 @@
         STREAK
       </th>
     </tr>
-    {% for entry in leaderboard %}
+    <tr class="first">
+      <td class="names">{{ leaderboard[0][0] }}</td>
+      <td class="names">{{ leaderboard[0][2] }}</td>
+      <td class="scores" style="text-align: center">{{ leaderboard[0][1] }}</td>
+    </tr>
+    <tr class="second">
+      <td class="names">{{ leaderboard[1][0] }}</td>
+      <td class="names">{{ leaderboard[1][2] }}</td>
+      <td class="scores" style="text-align: center">{{ leaderboard[0][1] }}</td>
+    </tr>
+    <tr class="third">
+      <td class="names">{{ leaderboard[2][0] }}</td>
+      <td class="names">{{ leaderboard[2][2] }}</td>
+      <td class="scores" style="text-align: center">{{ leaderboard[0][1] }}</td>
+    </tr>
+    {% for i in range(3, len) %}
     <tr>
-      <td class="names">{{ entry[0] }}</td>
-      <td class="names">{{ entry[2] }}</td>
+      <td class="names">{{ leaderboard[i][0] }}</td>
+      <td class="names">{{ leaderboard[i][2] }}</td>
       <td class="scores" style="color: #437085; text-align: center">
-        {{ entry[1] }}
+        {{ leaderboard[i][1] }}
       </td>
     </tr>
     {% endfor %}
