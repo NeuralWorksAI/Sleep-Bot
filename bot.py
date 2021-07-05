@@ -85,13 +85,11 @@ async def setup(ctx, goal=None, timezone=None):
         timezone = int(timezone[1:3])*60 + (int(timezone[4:6]))
         if sign == "-":
             timezone = 0 - timezone
-        
         user_datetime = datetime.utcnow().replace(hour=int(goal[0:2]), minute=int(goal[3:5]))
         user_utc_time = user_datetime + timedelta(days=1)
-        user_utc_time =- timedelta(minutes=timezone)
+        user_utc_time -= timedelta(minutes=timezone)
         username = await bot.fetch_user(int(ctx.message.author.id))
         username = str(username)
-
         connection.new_record(str(ctx.message.author.id), 0, timezone, str(user_utc_time),  username)
         await ctx.channel.send(f"{ctx.message.author.mention} Your time has been set!")
     return
