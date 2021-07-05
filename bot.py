@@ -55,7 +55,7 @@ async def on_member_update(before, after):
                 await channel.send(f"<@{strid}> Congrats, you beat your target time of {dtstring(current_time_local)}, your new target is {dtstring(utc_to_local(new_current, user['timezone']))}")
                 connection.update_current(strid, new_current)
 
-            elif datetime.utcnow() > current_time and datetime.utcnow() < time + timedelta(hours=8):
+            elif datetime.utcnow() > current_time and datetime.utcnow():
                 await channel.send(f"<@{strid}> Your missed your target of {dtstring(current_time_local)}, your new target is {dtstring(utc_to_local(datetime.utcnow(), user['timezone']))}")
                 connection.update_current(strid, datetime.utcnow())
 
@@ -87,7 +87,7 @@ async def setup(ctx, goal=None, timezone=None):
             timezone = 0 - timezone
         
         user_datetime = datetime.utcnow().replace(hour=int(goal[0:2]), minute=int(goal[3:5]))
-        user_utc_time = user_datetime + timedelta(minutes=timezone, days=1)
+        user_utc_time = user_datetime + timedelta(minutes=0-timezone, days=1)
         username = await bot.fetch_user(int(ctx.message.author.id))
         username = str(username)
 
