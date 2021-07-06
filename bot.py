@@ -55,8 +55,8 @@ async def on_member_update(before, after):
                 await channel.send(f"<@{strid}> Congrats, you beat your target time of {dtstring(current_time_local)}, your new target is {dtstring(utc_to_local(new_current, user['timezone']))}")
                 connection.update_current(strid, new_current)
 
-            elif datetime.utcnow() > current_time and datetime.utcnow():
-                await channel.send(f"<@{strid}> Your missed your target of {dtstring(current_time_local)}, your new target is {dtstring(utc_to_local(datetime.utcnow(), user['timezone']))}")
+            elif datetime.utcnow() > current_time:
+                await channel.send(f"<@{strid}> You missed your target of {dtstring(current_time_local)}, your new target is {dtstring(utc_to_local(datetime.utcnow(), user['timezone']))}")
                 connection.update_current(strid, datetime.utcnow())
 
             connection.update_goal(strid, time)
