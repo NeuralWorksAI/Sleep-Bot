@@ -27,13 +27,13 @@
     <tr class="second">
       <td class="names">{{ leaderboard[1][0] }}</td>
       <td class="names">{{ leaderboard[1][2] }}</td>
-      <td class="scores" style="text-align: center">{{ leaderboard[0][1] }}</td>
+      <td class="scores" style="text-align: center">{{ leaderboard[1][1] }}</td>
     </tr>
     {% endif %} {% if len > 2 %}
     <tr class="third">
       <td class="names">{{ leaderboard[2][0] }}</td>
       <td class="names">{{ leaderboard[2][2] }}</td>
-      <td class="scores" style="text-align: center">{{ leaderboard[0][1] }}</td>
+      <td class="scores" style="text-align: center">{{ leaderboard[2][1] }}</td>
     </tr>
     {% endif %} {% for i in range(3, len) %}
     <tr>
