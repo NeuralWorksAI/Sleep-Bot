@@ -47,7 +47,7 @@ async def on_member_update(before, after):
                 await channel.send(f"<@{strid}> Congrats, you have kept your time goal for {user['streak']+1} days!")
                 connection.update_current(strid, time)
                 connection.update_goal(strid, time)
-                connection.increment_streak()
+                connection.increment_streak(strid)
                 return
 
             elif datetime.utcnow() <= current_time and datetime.utcnow() > time:
